@@ -1,0 +1,18 @@
+2025년 7월 26일
+-
+    npm install --save-dev @types/react
+-네비게이션 기능
+    npm install @react-navigation/native
+    npm install @react-navigation/native-stack
+    npm install react-native-safe-area-context
+    npm install react-native-screens
+
+
+-자연스러운 스크롤 기능
+    npm install react-native-reanimated react-native-gesture-handler
+    npm install react-native-worklets
+
+
+추가해야될 점
+ - memberInfo에 게시글 리스트 
+ - 게시글 객체(게시글이 갖는 정보)
