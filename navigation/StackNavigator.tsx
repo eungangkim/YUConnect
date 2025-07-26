@@ -14,6 +14,7 @@ const StackNavigator = () => (
         name="Matching"
         component={MatchingScreen}
         initialParams={{ id: 1, name: "김은강" }}
+        options={{headerShown:true}}
       />
     </Stack.Navigator>
   </NavigationContainer>

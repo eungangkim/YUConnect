@@ -1,7 +1,14 @@
-
 // react-native-reanimated + react-native-gesture-handler
-import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,120 +19,90 @@ import {
   GestureHandlerRootView,
   Gesture,
 } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const { height } = Dimensions.get('window');
+import { posts } from '../data/data';
+import { MatchingScreenStyle } from '../styles/MatchingScreen';
+import ImageWindow from '../Components/ImageWindow';
 
-const data = [
-  { key: '1', text: '첫 번째 화면(reanimated)', backgroundColor: '#ff6666' }, // 빨강 계열
-  { key: '2', text: '두 번째 화면(reanimated)', backgroundColor: '#66ff66' }, // 초록 계열
-  { key: '3', text: '세 번째 화면(reanimated)', backgroundColor: '#6666ff' }, // 파랑 계열
-];
-export const MatchingScreen=()=> {
+
+  const { height: windowHeight } = Dimensions.get('window');
+  
+export const MatchingScreen = () => {
+    const insets = useSafeAreaInsets();
+  const usableHeight = windowHeight - insets.top - insets.bottom;
+
   const translateY = useSharedValue(0);
   const currentPage = useSharedValue(0);
 
   const gesture = Gesture.Pan()
-    .onUpdate((e) => {
-      translateY.value = e.translationY + -currentPage.value * height;
+    .onUpdate(e => {
+      translateY.value = e.translationY + -currentPage.value * usableHeight;
     })
     .onEnd(() => {
-      if (translateY.value > -currentPage.value * height + height / 3) {
+      if (translateY.value > -currentPage.value * usableHeight + usableHeight / 3) {
         // 스와이프가 아래로 많이 됐으면 이전 페이지로
         currentPage.value = Math.max(0, currentPage.value - 1);
-      } else if (translateY.value < -currentPage.value * height - height / 3) {
+      } else if (translateY.value < -currentPage.value * usableHeight - usableHeight / 3) {
         // 스와이프가 위로 많이 됐으면 다음 페이지로
-        currentPage.value = Math.min(data.length - 1, currentPage.value + 1);
+        currentPage.value = Math.min(posts.length - 1, currentPage.value + 1);
       }
-      translateY.value = withSpring(-currentPage.value * height);
+      translateY.value = withSpring(-currentPage.value * usableHeight);
     });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
   }));
 
+  const [selectedImages, setSelectedImages] = useState<Array<string | any>>([]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <Animated.View style={[{ flex: 1 }, animatedStyle]}>
-          {data.map((item,i) => (
-            <View key={i} style={[styles.page,{backgroundColor:item.backgroundColor}]}>
-              <Text style={styles.text}>{item.text}</Text>
+          {posts.map((item, i) => (
+            <View
+              key={item.id}
+              style={[
+                MatchingScreenStyle.page,
+                {
+                  backgroundColor: item.forLove ? '#e284c4ff' : '#6dc4dcff',
+                  height: usableHeight,
+                },
+              ]}
+            >
+              <View style={{ borderWidth:1}}>
+                <Text>참가한 사용자 목록</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    marginBottom: 20,
+                    borderWidth:2,
+                  }}
+                >
+                  {item.userList.map(user => (
+                    <TouchableOpacity
+                      key={user.id}
+                      style={{ marginRight: 10, marginBottom: 10 }}
+                      onPress={() => setSelectedImages(user.images)}
+                    >
+                      <Text style={{ fontWeight: 'bold' }}>{user.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <ImageWindow images={selectedImages}/>
+                <View style={{borderWidth: 2, marginTop: 0 }}>
+                <Text style={MatchingScreenStyle.text}>{item.description}</Text>
+              </View>
+              </View>
+              
             </View>
           ))}
         </Animated.View>
       </GestureDetector>
     </GestureHandlerRootView>
   );
-}
-
-const styles = StyleSheet.create({
-  page: {
-    height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#333',
-  },
-  text: {
-    fontSize: 32,
-    color: 'white',
-  },
-});
-
+};
 
 export default MatchingScreen;
 
-
-
-/*
-//   사용
-import React from 'react';
-import { Dimensions, FlatList, StyleSheet, View, Text } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../types/navigation'; // RootStackParamList 정의된 곳
-
-type MatchingScreenRouteProp = RouteProp<RootStackParamList, 'Matching'>;
-
-type Props = {
-  route: MatchingScreenRouteProp;
-};
-const { height } = Dimensions.get('window');
-
-const data = [
-  { key: '1', text: '첫 번째 화면(FlatList)', backgroundColor: '#ff6666' }, // 빨강 계열
-  { key: '2', text: '두 번째 화면(FlatList)', backgroundColor: '#66ff66' }, // 초록 계열
-  { key: '3', text: '세 번째 화면(FlatList)', backgroundColor: '#6666ff' }, // 파랑 계열
-];
-const MatchingScreen = () => {
-  return (
-    <FlatList
-      data={data}
-      keyExtractor={(item) => item.key}
-      pagingEnabled // 페이징 활성화
-      horizontal={false} // 수직 스크롤
-      snapToInterval={height} // 화면 높이마다 스냅
-      decelerationRate="fast"
-      showsVerticalScrollIndicator={false}
-      renderItem={({ item }) => (
-        <View style={[styles.page,{backgroundColor:item.backgroundColor}]}>
-          <Text style={styles.text}>{item.text}</Text>
-        </View>
-      )}
-    />
-  );
-};
-
-const styles = StyleSheet.create({
-  page: {
-    height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#222',
-  },
-  text: {
-    fontSize: 30,
-    color: 'white',
-  },
-});
-
-export default MatchingScreen;
-*/

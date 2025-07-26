@@ -8,14 +8,17 @@
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import StackNavigator from './navigation/StackNavigator';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={styles.container}>
-      <StackNavigator/>
-    </View>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <StackNavigator />
+      </View>
+    </SafeAreaProvider>
   );
 }
 
