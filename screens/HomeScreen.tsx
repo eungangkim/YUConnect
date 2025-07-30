@@ -11,7 +11,7 @@ const HomeScreen = () => {
       <Button
         title="go Matching Screen"
         onPress={() => {
-          navigation.navigate('Matching', { id: 1, name: '김은강' });
+          navigation.navigate("매칭", { id: 1, name: '김은강' });
         }}
       />
     </View>

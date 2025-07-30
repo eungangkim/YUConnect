@@ -86,7 +86,7 @@ export const members = [
 
   memberInfo(
     "3",
-    "윈터",
+    "윈터터터터ㅓ터터터터ㅓ터ㅓ터터터ㅓㅓㅓㅓ터터터",
     true,
     "minsu@example.com",
     "010-4567-8901",
@@ -108,6 +108,7 @@ export const members = [
     false,
     true
   ),
+  
 ];
 
 
@@ -116,8 +117,8 @@ export const posts = [
     "post1",
     true,
     false,
-    "같이 넷플릭스 보고 영화 이야기 나눌 사람 구해요! 🎬",
-    [members[0],members[1]],
+    "같이 넷플릭스 보고 영화 이야기 나눌 사람 구해요!ㅇㄴ어ㅣ너임너인밍ㄴ머이머이너머임임넝너ㅣ넘어미ㅣㅓ어임너ㅣㄴㅁ이닝너어ㅣㅁㄴ어ㅣㄴㅁ어ㅣㅁㄴ어ㅣㄴㅁ임너ㅣ언미언미어너ㅓㅣ니 🎬",
+    [members[0],members[1],members[2],members[3],],
     "/chat/post1"
   ),
 

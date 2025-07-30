@@ -1,6 +1,6 @@
 export type RootStackParamList = {
     Home:undefined
-    Matching:{
+    매칭:{
         id:number
         name:string
     };

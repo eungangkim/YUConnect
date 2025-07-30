@@ -11,7 +11,7 @@ const StackNavigator = () => (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen
-        name="Matching"
+        name="매칭"
         component={MatchingScreen}
         initialParams={{ id: 1, name: "김은강" }}
         options={{headerShown:true}}
